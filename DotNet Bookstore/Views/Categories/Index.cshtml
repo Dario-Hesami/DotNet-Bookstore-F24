@@ -5,6 +5,7 @@
     ViewData["Title"] = "Shop our store";
 }
 <h1>Shope our store</h1>
+<a asp-controller="Categories" asp-action="Create">Add a new category</a>
 <ul>
     @foreach (var c in Model)
     {
