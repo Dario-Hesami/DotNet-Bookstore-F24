@@ -11,6 +11,11 @@ namespace DotNet_Bookstore.Controllers
 
         public IActionResult Browse(string category)
         {
+            // if category empty, redirct to Index method so user can first pick a category
+            if (category == null)
+            {
+                return RedirectToAction("Index");
+            }
             ViewBag.Category = category;
             return View();
         }
