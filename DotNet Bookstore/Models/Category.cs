@@ -12,7 +12,6 @@ namespace DotNet_Bookstore.Models
         public string Name { get; set; }
 
         // child reference to Books (1 Category / Many Books)
-
         public List<Book>? Books { get; set; }
     }
 }
