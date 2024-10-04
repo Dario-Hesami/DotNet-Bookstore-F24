@@ -22,7 +22,7 @@ namespace DotNet_Bookstore.Controllers
         // GET: Books
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Books.Include(b => b.Category);
+            var applicationDbContext = _context.Books.Include(b => b.Category).OrderBy(b => b.Author).ThenBy(b => b.Title);
             return View(await applicationDbContext.ToListAsync());
         }
 
