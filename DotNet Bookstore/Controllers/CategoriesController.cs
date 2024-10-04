@@ -11,7 +11,7 @@ namespace DotNet_Bookstore.Controllers
             var categories = new List<Category>();
             for (var i=1; i<11; i++)
             {
-                categories.Add(new Category { CtegoryId = i, Name = "Category " + i.ToString() });
+                categories.Add(new Category { CategoryId = i, Name = "Category " + i.ToString() });
             }
 
             return View(categories);
