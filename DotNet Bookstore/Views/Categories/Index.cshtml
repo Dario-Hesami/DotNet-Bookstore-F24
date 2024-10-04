@@ -1,21 +1,35 @@
 ﻿@model IEnumerable<DotNet_Bookstore.Models.Category>
 
-
 @{
-    ViewData["Title"] = "Shop our store";
+    ViewData["Title"] = "Index";
 }
-<h1>Shope our store</h1>
-<a asp-controller="Categories" asp-action="Create">Add a new category</a>
-<ul>
-    @foreach (var c in Model)
-    {
-        <li>
-            <a asp-controller="Categories" asp-action="Browse" asp-route-category="@c.Name">@c.Name</a>            
-        </li>
-    }
-    @* <li><a asp-controller="categories" asp-action="browse" asp-route-category="Category 1">Category 1</a></li>
-    <li><a asp-controller="categories" asp-action="browse" asp-route-category="Category 2">Category 2</a></li>
-    <li><a asp-controller="categories" asp-action="browse" asp-route-category="Category 3">Category 3</a></li> *@
 
+<h1>Index</h1>
 
-</ul>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CategoryId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CategoryId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CategoryId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

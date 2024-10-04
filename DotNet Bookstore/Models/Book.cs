@@ -10,6 +10,7 @@ namespace DotNet_Bookstore.Models
         [MaxLength(100)]
         public string Author { get; set; }
         [Required]
+        [MaxLength(150)]
         public string Title { get; set; }
         public string? Image { get; set; }
         [Required]
