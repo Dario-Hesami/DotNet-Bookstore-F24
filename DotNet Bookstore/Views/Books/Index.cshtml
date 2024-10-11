@@ -9,7 +9,7 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table sortable">
     <thead>
         <tr>
             <th>
@@ -18,7 +18,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
-            <th>
+            <th class="sorttable_nosort img-table">
                 @Html.DisplayNameFor(model => model.Image)
             </th>
             <th>

@@ -15,10 +15,13 @@ namespace DotNet_Bookstore.Models
         public string? Image { get; set; }
         [Required]
         [Range(0.01, 999999)]
+        [DisplayFormat(DataFormatString = "{0:c}")]
         public decimal Price { get; set; }
+        [Display(Name = "Mature Content")]
         public bool MatureContent { get; set; }
 
         //FK
+        [Display(Name =("Category"))]
         public int CategoryId { get; set; }
 
         // child references
