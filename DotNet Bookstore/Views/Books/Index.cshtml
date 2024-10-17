@@ -41,11 +41,17 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
-            </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Image)
+                    @if (item.Image != null)
+                    {
+                        <img src="~/img/books/@item.Image" alt="Book Cover" class="img-fluid book-img-admin" style="max-width:60%" />
+                    }
+                    else
+                    {
+                        <img src="~/img/books/bookcover-placeholder.jpg" alt="Book Cover" class="img-fluid book-img-admin" style="max-width:60%" />
+                    }
+                    @* @Html.DisplayFor(modelItem => item.Image) *@
             </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
