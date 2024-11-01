@@ -21,6 +21,10 @@ body {
   margin-bottom: 60px;
 }
 
+#book-img {
+    max-height:8rem;
+}
+
 /* Sortable tables */
 table.sortable thead {
     background-color: #eee;

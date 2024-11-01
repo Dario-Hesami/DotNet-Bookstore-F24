@@ -1,16 +1,16 @@
 ﻿@model DotNet_Bookstore.Models.Book
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Book";
 }
 
-<h1>Edit</h1>
+<h1>Edit Book</h1>
 
-<h4>Book</h4>
+@* <h4>Book</h4> *@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="BookId" />
             <div class="form-group">
@@ -25,9 +25,16 @@
             </div>
             <div class="form-group">
                 <label asp-for="Image" class="control-label"></label>
-                <input asp-for="Image" class="form-control" />
+                <input asp-for="Image" class="form-control" type="file" accept="image/*" />
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
+            @if (Model.Image != null)
+            {
+                <div>
+                    <img src="~/img/books/@Model.Image" alt="Book Cover" class="img-fluid img-thumbnail" />
+                </div>
+            }
+            <input type="hidden" name="CurrentImage" id="CurrentImage" value="@Model.Image" />
             <div class="form-group">
                 <label asp-for="Price" class="control-label"></label>
                 <input asp-for="Price" class="form-control" />
