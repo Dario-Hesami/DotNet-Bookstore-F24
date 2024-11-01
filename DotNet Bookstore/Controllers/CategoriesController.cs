@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DotNet_Bookstore.Data;
 using DotNet_Bookstore.Models;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace DotNet_Bookstore.Controllers
 {
+    [Authorize]
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -25,6 +28,7 @@ namespace DotNet_Bookstore.Controllers
             return View(await _context.Categories.ToListAsync());
         }
 
+        [AllowAnonymous]
         // GET: Categories/Details/5
         public async Task<IActionResult> Details(int? id)
         {
