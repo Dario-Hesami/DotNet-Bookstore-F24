@@ -1,0 +1,19 @@
+﻿@model IEnumerable<DonNet_Bookstore.Models.Category>
+
+@{
+    ViewData["Title"] = "Shop Our Store";
+}
+
+<h1>Shop Our Store</h1>
+<section class="row card-group">
+    @foreach (var c in Model)
+    {
+        <div class="col-sm-6 col-lg-4 mb-3">
+            <div class="card mb-4 text-center h-100">
+                <div class="card-body">
+                    <a asp-controller="Shop" asp-action="ShopByCategory" asp-route-id="@c.CategoryId">@c.Name</a>
+                </div>
+            </div>
+        </div>
+    }
+</section>
