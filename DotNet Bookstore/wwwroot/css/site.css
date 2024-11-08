@@ -54,3 +54,7 @@ table.sortable th:nth-of-type(6) {
     cursor: default;
     color: #666666;
 }
+
+.card-body > a {
+    text-decoration:none;
+}
