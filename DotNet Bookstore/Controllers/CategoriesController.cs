@@ -12,7 +12,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DotNet_Bookstore.Controllers
 {
-    [Authorize]
+    //[Authorize]
+    // Role Based Authorization
+    [Authorize(Roles = "Administrator")]
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -28,6 +30,7 @@ namespace DotNet_Bookstore.Controllers
             return View(await _context.Categories.ToListAsync());
         }
 
+        // Allow anonymous users to access the Details action method.
         [AllowAnonymous]
         // GET: Categories/Details/5
         public async Task<IActionResult> Details(int? id)
