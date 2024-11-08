@@ -14,6 +14,7 @@ namespace DotNet_Bookstore.Controllers
 {
     //[Authorize]
     // Role Based Authorization
+    // Authorize admin - Administrator access only
     [Authorize(Roles = "Administrator")]
     public class CategoriesController : Controller
     {

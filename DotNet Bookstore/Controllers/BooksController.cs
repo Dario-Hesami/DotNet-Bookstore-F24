@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace DotNet_Bookstore.Controllers
 {
     // Role Based Authorization
+    // Authorize admin - Administrator access only
     [Authorize(Roles = "Administrator")]
     public class BooksController : Controller
     {
