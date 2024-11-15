@@ -1,0 +1,4 @@
+// *** Note ***
+// "appsettings.json" is not pushed to the repository for security reasons.
+// To get the app running, add "appsettings.json" to the project.
+// Ask the course instructor about this file.
