@@ -1,0 +1,47 @@
+﻿@model IEnumerable<DotNet_Bookstore.Models.Book>
+
+@{
+    ViewData["Title"] = "Shop By Category";
+}
+
+<h1 class="text-center bg-light text-dark">You are shopping for: @ViewData["Category"]</h1>
+
+
+<section class="row card-group">
+
+    @foreach (var item in Model)
+    {
+        <div class="col-sm-6 col-lg-4 mb-3">
+            <div class="card mb-4 text-center h-100">
+                <div class="card-body">
+                    <a asp-controller="Books" asp-action="Details" asp-route-id="@item.BookId" class="h5">
+                        @item.Title
+                    </a>
+                    <h6>@item.Author</h6>
+                    <h6>@String.Format("{0:c}", item.Price)</h6>
+                    @if (@item.Image != null)
+                    {
+                        <img src="~/img/books/@item.Image" alt="Book Cover" class="img-fluid img-thumbnail" style="max-width:70%" />
+                    }
+                    else
+                    {
+                        <img src="~/img/books/bookcover-placeholder.jpg" alt="Book Cover" class="img-fluid img-thumbnail" style="max-width:70%" />
+                    }
+
+                    <form method="post" action="/Shop/AddToCart">
+                        <input type="hidden" name="BookId" value="@item.BookId" />
+                        <fieldset class="form-group mt-3">
+                            <label for="Quantity">Quantity: </label>
+                            <input type="number" id="Quantity" name="Quantity" required min="1" max="9999" value="1" class="input-small" />
+                        </fieldset>
+                        <button class="btn btn-primary m-2">
+                            Add to Cart
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    }
+
+</section>

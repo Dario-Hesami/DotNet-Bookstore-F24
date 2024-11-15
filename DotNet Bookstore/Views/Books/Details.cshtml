@@ -1,13 +1,13 @@
 ﻿@model DotNet_Bookstore.Models.Book
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Book Details";
 }
 
-<h1>Details</h1>
+<h1>Book Details</h1>
 
 <div>
-    <h4>Book</h4>
+    @* <h4>Book</h4> *@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -49,6 +49,13 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.BookId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @if(User.IsInRole("Administrator")) 
+    {
+        <a asp-action="Edit" asp-route-id="@Model?.BookId">Edit</a> 
+        <a asp-action="Index">Back to List</a>
+    }
+    else {
+        <a href="javascript:history.go(-1)">Back</a>
+
+    }
 </div>
