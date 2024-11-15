@@ -29,6 +29,8 @@ builder.Services.AddAuthentication()
         options.ClientId = configuration["Authentication:Google:ClientId"];
         options.ClientSecret = configuration["Authentication:Google:ClientSecret"];
     });
+// enable Sessions
+builder.Services.AddSession();
 
 
 
@@ -57,5 +59,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+
+// use sessions
+app.UseSession();
 
 app.Run();

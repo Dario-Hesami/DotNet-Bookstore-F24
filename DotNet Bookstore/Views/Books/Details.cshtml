@@ -22,12 +22,12 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Title)
         </dd>
-        <dt class = "col-sm-2">
+@*         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Image)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Image)
-        </dd>
+        </dd> *@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Price)
         </dt>
@@ -46,6 +46,11 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Category.Name)
         </dd>
+        <dd class="col-sm-10">
+            @if (Model.Image != null) {
+                <img src="~/img/books/@Model.Image" alt="Book Cover" class="img-fluid img-thumbnail" />
+            }
+        </dd>
     </dl>
 </div>
 <div>
@@ -55,6 +60,18 @@
         <a asp-action="Index">Back to List</a>
     }
     else {
+
+        <form method="post" action="/Shop/AddToCart">
+            <input type="hidden" name="BookId" value="@Model.BookId" />
+            <fieldset class="form-group mt-3">
+                <label for="Quantity">Quantity: </label>
+                <input type="number" id="Quantity" name="Quantity" required min="1" max="9999" value="1" class="input-small" />
+            </fieldset>
+            <button class="btn btn-primary m-2">
+                Add to Cart
+            </button>
+        </form>
+
         <a href="javascript:history.go(-1)">Back</a>
 
     }
