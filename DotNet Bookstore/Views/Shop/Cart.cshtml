@@ -9,45 +9,86 @@
 @* <p>
     <a asp-action="Create">Create New</a>
 </p> *@
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Quantity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-@*             <th>
-                @Html.DisplayNameFor(model => model.CustomerId)
-            </th> *@
-            <th>
-                @Html.DisplayNameFor(model => model.Book)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-@*             <td>
-                @Html.DisplayFor(modelItem => item.CustomerId)
-            </td> *@
-            <td>
-                @Html.DisplayFor(modelItem => item.Book.Title)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CartItemId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CartItemId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CartItemId">Delete</a>
-            </td>
-        </tr>
+@if (Model.Count() == 0)
+{
+    <h4 class="text-danger">Your Cart is Empty</h4>
+    <a class="btn btn-primary" asp-action="Index">Start Shopping</a>
 }
-    </tbody>
-</table>
+else
+{
+    decimal total = 0;
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Book)
+                </th>
+                <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                @*             <th>
+                    @Html.DisplayNameFor(model => model.CustomerId)
+                </th> *@
+                <th>
+                    @Html.DisplayNameFor(model => model.Quantity)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                total += (item.Price * item.Quantity);
+                <tr>
+                    <td>
+                        <a asp-controller="Books" asp-action="Details" asp-route-id="@item.BookId">
+                            @Html.DisplayFor(modelItem => item.Book.Title)
+                        </a>
+                    </td>
+                    <td>
+                        @if (item.Book.Image != null)
+                        {
+                            <img src="~/img/books/@item.Book.Image" alt="Book Cover" class="img-fluid img-thumbnail cart-images">
+                        }
+                        else
+                        {
+                            <img src="~/img/books/bookcover-placeholder.jpg" alt="Book Cover" class="img-fluid img-thumbnail cart-images">
+                        }
+                    </td>
+                    <td>
+                        @String.Format("{0:c}", item.Price)
+                    </td>
+                    @*             <td>
+                    @Html.DisplayFor(modelItem => item.CustomerId)
+                </td> *@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @*                 <a asp-action="Edit" asp-route-id="@item.CartItemId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.CartItemId">Details</a> | *@
+                        <a asp-action="RemoveFromCart" asp-route-id="@item.CartItemId" onclick="return confirmDelete();">Remove</a>
+                    </td>
+                </tr>
+            }
+
+            @* display total *@
+            <tr>
+                <td colspan="2">
+                <td><strong><span class="text-primary">Total: </span>@String.Format("{0:c}", total)</strong>	 </td>
+                <td>
+                    <a class="btn btn-primary" asp-action="Index">
+                        Continue Shopping
+                    </a>
+                </td>
+                <td>
+                    <a class="btn btn-primary" asp-action="Checkout">
+                        Checkout
+                    </a>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+}
