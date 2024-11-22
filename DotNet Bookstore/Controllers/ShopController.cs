@@ -1,5 +1,6 @@
 ﻿using DotNet_Bookstore.Data;
 using DotNet_Bookstore.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -138,6 +139,37 @@ namespace DotNet_Bookstore.Controllers
             // refresh and display cart
             return RedirectToAction("Cart");
         }
+
+        // GET: /Shop/Ceckout | display an empty checkout form to get customer info
+        public IActionResult Checkout()
+        {
+            return View();
+        }
+
+        // POST: /Shop/Checkout
+        // capture form data (order containing customer info) and save customer info in a session var
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public IActionResult Checkout([Bind("FirstName,LastName,Address,City,Province,PostalCode,Phone")] Order order)
+        {
+            // fill the CustomerId and OrderDate
+            order.OrderDate = DateTime.Now;
+            order.CustomerId = User.Identity.Name;
+
+            // calculate the OrderTotal and set this property
+            var cartItems = _context.CartItems.Where(c => c.CustomerId == GetCustomerId());
+            order.OrderTotal = (from c in cartItems
+                                select (c.Quantity * c.Price)).Sum();
+
+            // save oredr object to session var - after successful payment, retrieve the oreder object from the session var and save it to db
+            HttpContext.Session.SetObject("Order", order);
+
+
+            // redirect to stripe payment
+            return RedirectToAction("Payment");
+        }
+
 
     }
 }
