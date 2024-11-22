@@ -3,16 +3,22 @@ using DotNet_Bookstore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
+using Stripe.Checkout;
 
 namespace DotNet_Bookstore.Controllers
 {
     public class ShopController : Controller
     {
         private readonly ApplicationDbContext _context;
+        
+        // class level conig object to read Stripe SecretKey from appsettings.json
+        private readonly IConfiguration _configuration;
 
-        public ShopController(ApplicationDbContext context)
+        public ShopController(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
         public IActionResult Index()
         {
@@ -169,6 +175,100 @@ namespace DotNet_Bookstore.Controllers
             // redirect to stripe payment
             return RedirectToAction("Payment");
         }
+
+        // GET: /Shop/Payment
+        // invoke Stripe payment page & response
+        [Authorize]
+
+        public IActionResult Payment()
+        {
+            // get the order from our session var
+            var order = HttpContext.Session.GetObject<Order>("Order");
+
+            // read Stripe SecretKey from app configuration (appsettings.json) using _configuration class var
+            StripeConfiguration.ApiKey = _configuration.GetValue<string>("StripeSecretKey");
+            //StripeConfiguration.ApiKey = "sk_test_51OFKOwHXWyWx1WwQXKhXUBJVrJ8BSYNo1AaHQ4q5855GHCJRFKSCbbyqPZlOqEtvCrEJliEaWYKLMRK87TzXVxvc00KqVZQu6Z";
+
+            // source: https://stripe.com/docs/checkout/quickstart and modified
+
+            // get domain dynamically (local or live)
+            var domain = "https://" + Request.Host;
+
+            // create Stripe payment object
+            var options = new SessionCreateOptions
+            {
+                LineItems = new List<SessionLineItemOptions>
+                {
+                  new SessionLineItemOptions
+                  {
+                      PriceData = new SessionLineItemPriceDataOptions
+                      {
+                          UnitAmount = (long?)(order.OrderTotal * 100), // amount in smalles currency unit (e.g., cents)
+                          Currency = "cad",
+                          ProductData = new SessionLineItemPriceDataProductDataOptions
+                          {
+                              Name = "DotNetBookstore Purchase"
+                          }
+                      },
+                    Quantity = 1,
+                  },
+                },
+                Mode = "payment",
+                SuccessUrl = domain + "/Shop/SaveOrder",
+                CancelUrl = domain + "/Shop/Cart",
+            };
+
+            // invoke Stripe with the above payment object
+            var service = new SessionService();
+            Session session = service.Create(options);
+
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
+        }
+
+        // GET: /Shop/SaveOrder
+        // once the payment is made, save the order and then show the confirmation
+        [Authorize]
+        public IActionResult SaveOrder()
+        {
+            // the user's order already has been saved in a session variable (an object)
+            // get the order from session var
+            var order = HttpContext.Session.GetObject<Order>("Order");
+
+            // save the order to db
+            _context.Orders.Add(order);
+            _context.SaveChanges();
+
+            // save the user's cart items to db-OrderDetail 
+            var cartItems = _context.CartItems.Where(c => c.CustomerId == GetCustomerId());
+            foreach (var item in cartItems)
+            {
+                var orderDetail = new OrderDetail
+                {
+                    BookId = item.BookId,
+                    Quantity = item.Quantity,
+                    Price = item.Price,
+                    OrderId = order.OrderId
+                };
+
+                _context.OrderDetails.Add(orderDetail);
+            }
+            _context.SaveChanges();
+
+            // remove the user's cart items
+            foreach (var item in cartItems)
+            {
+                _context.CartItems.Remove(item);
+            }
+            _context.SaveChanges();
+
+            // clear all session vars
+            HttpContext.Session.Clear();
+
+            // redirect to  the order confirmation - /Orders/Details/5
+            return RedirectToAction("Details", "Orders", new { @id = order.OrderId });
+        }
+
 
 
     }
